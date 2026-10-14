@@ -1,0 +1,23 @@
+name: Exact finite verification
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Exact public replay and semantic controls
+        run: python -B code/verify.py --census
+      - name: Optimization-safe replay
+        run: python -B -O code/verify.py --census
+      - name: Printed partition rows
+        run: python -B code/check_manuscript_tables.py
+      - name: Frozen inventory
+        run: python -B code/check_manifest.py

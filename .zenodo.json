@@ -1,0 +1,13 @@
+{
+  "title": "The Betti poset does not determine the Stanley projective dimension of a monomial ideal",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "Unrefereed research candidate. Two six-generated monomial ideals have isomorphic Betti posets over every field but Stanley projective dimensions three and two. A corrected nine-monomial analytic obstruction, explicit positive partitions and finite exhaustive checks support the separation. A census of all 7,443 five-atom lattices establishes that six generators are necessary. An explicit squarefree single-variable colon realization gives the separation in one ambient ring. Both example quotients have Stanley projective dimension five: the quotient assertion and the restricted simplicial-spanning-tree programme remain unresolved. Internal computational replay is not external peer review, unaffiliated reproduction or proof-assistant formal verification. Original prose and data are CC0-1.0; original code is MIT.",
+  "creators": [{"name": "Anonymous"}],
+  "version": "2.0.0-candidate",
+  "publication_date": "2026-10-14",
+  "access_right": "open",
+  "license": "cc-zero",
+  "keywords": ["Stanley depth", "Betti poset", "monomial ideal", "lcm-lattice", "counterexample", "computer-assisted proof"],
+  "related_identifiers": [{"identifier": "https://github.com/ipitchford/katthan-betti-poset-counterexample", "relation": "isSupplementTo", "scheme": "url"}]
+}

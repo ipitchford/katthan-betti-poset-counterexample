@@ -1,0 +1,445 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,enumitem}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={The Betti poset does not determine the Stanley projective dimension of a monomial ideal},pdfauthor={Anonymous}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\sdepth}{sdepth}
+\DeclareMathOperator{\spdim}{spdim}
+\DeclareMathOperator{\pdim}{pdim}
+\DeclareMathOperator{\depth}{depth}
+\DeclareMathOperator{\lcm}{lcm}
+\newcommand{\B}{\mathcal B}
+\newcommand{\K}{\mathbb K}
+\newcommand{\e}{\mathbf e}
+\newcommand{\vct}[1]{\boldsymbol{#1}}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\setlength{\emergencystretch}{2em}
+\title{\textbf{The Betti poset does not determine\\the Stanley projective dimension\\of a monomial ideal}}
+\author{Anonymous}
+\date{14 October 2026\\\small Version 2.0.0-candidate; unrefereed manuscript\\\small\href{https://doi.org/10.5281/zenodo.23362079}{doi:10.5281/zenodo.23362079}}
+\begin{document}
+\maketitle
+\begin{abstract}
+We give two six-generated monomial ideals whose Betti posets are isomorphic over every field, but whose Stanley projective dimensions are respectively three and two. Their lcm-lattices have 60 and 59 elements and differ by one non-Betti meet-irreducible element. This disproves the ideal assertion of Katth\"an's Betti-poset conjecture; the quotient assertion is not disproved. We give complete positive Stanley decompositions, a corrected nine-monomial obstruction with an analytic proof, and a separate exhaustive-cover verification. Direct annihilator witnesses show that both quotients have Stanley projective dimension five. An explicit squarefree single-variable colon realization places the same separation in one polynomial ring. Finally, a finite census of all 7,443 five-atom lattices establishes constancy of the ideal invariant on each Betti-poset isomorphism class, so six generators are necessary. The quotient statement for at most five generators is already known. Integral homology checks make the finite results characteristic-independent. The computational parts are reproducible finite checks, not proof-assistant formalisation.
+\end{abstract}
+\noindent\textbf{Keywords:} Stanley depth; Betti poset; lcm-lattice; monomial ideal; interval partition.\\
+\textbf{2020 Mathematics Subject Classification:} 13F20, 13D02, 06A11.
+
+\section{Introduction and scope}
+For a monomial ideal, the lcm-lattice controls both homological invariants and Stanley projective dimension. The Betti poset keeps only those lattice degrees that support nonzero multigraded Betti numbers. Katth\"an asked whether this smaller poset also determines Stanley projective dimension, separately for the ideal and its quotient \cite{Katthan2016}. We answer the ideal question negatively, with the smallest possible number of generators.
+
+Throughout, $\K$ is an arbitrary field. Put $S=\K[x_1,\ldots,x_5]$ and $S'=\K[y_1,\ldots,y_7]$. Our two ideals have the following \emph{matched generator order}; every atom label below uses this order.
+\begin{center}
+\begin{tabular}{ccl}
+\toprule Atom & Generator of $I\subset S$ & Generator of $J\subset S'$\\\midrule
+1&$x_2x_3^2$&$y_2^2y_3^2y_6y_7$\\
+2&$x_5^2$&$y_5y_7^2$\\
+3&$x_1x_2x_3x_4x_5$&$y_1y_2y_3y_4y_5$\\
+4&$x_1^2x_3$&$y_1^2y_3^2$\\
+5&$x_4^2$&$y_4y_6^2$\\
+6&$x_1x_2^2$&$y_1y_2^3$\\\bottomrule
+\end{tabular}
+\end{center}
+\begin{theorem}\label{thm:main}
+For every field $\K$, the ideals above satisfy $\B(I)\cong\B(J)$ and
+\[
+\sdepth_S I=2,\qquad \sdepth_{S'}J=5,
+\qquad \spdim_S I=3,\qquad \spdim_{S'}J=2.
+\]
+Both quotients have total Betti sequence $(1,6,15,20,12,2)$ and Stanley projective dimension five. Thus the ideal assertion of the Betti-poset conjecture is false, whereas this pair satisfies its quotient assertion.
+\end{theorem}
+\begin{theorem}\label{thm:five}
+Among monomial ideals with at most five minimal generators, the isomorphism type of the Betti poset determines Stanley projective dimension, over every field. Consequently the six-generator threshold in Theorem~\ref{thm:main} is sharp.
+\end{theorem}
+The five-generator ideal statement uses the exhaustive calculation in Section~\ref{sec:census}. For quotients with at most five generators, equality of Stanley depth and ordinary depth was proved by Ichim, Katth\"an and Moyano-Fern\'andez \cite[Theorem 1.2]{IKMF2016}; that part is not a new computation here. The cases with at most four generators were already covered in the literature \cite{Katthan2016,IKMF2016}.
+
+Three kinds of evidence are kept separate: analytic arguments, explicit positive partitions that can be checked point by point, and finite exhaustive negative or census computations. The counterexample is not a further counterexample to Stanley's depth inequality: $\depth I=1<2=\sdepth I$ and $\depth J=3<5=\sdepth J$. Nor does it settle the surviving quotient question or the restricted simplicial-spanning-tree route discussed by Katth\"an \cite{Katthan2015,Katthan2016}.
+
+\section{Lattices, Betti posets and interval normalisation}\label{sec:prelim}
+For a finitely generated multigraded $\K[z_1,\ldots,z_n]$-module $M$, a Stanley decomposition is a finite direct sum $M=\bigoplus_i u_i\K[Z_i]$ of multigraded vector spaces, with each summand free over the polynomial ring on $Z_i\subseteq\{z_1,\ldots,z_n\}$. Its depth is $\min_i|Z_i|$, and $\sdepth M$ is the largest such depth. Set $\spdim M=n-\sdepth M$.
+
+The lcm-lattice $L_Q$ of a monomial ideal $Q$ consists of the lcms of all subsets of its minimal generators, with bottom $\hat0=1$. We identify a lattice element with the set of atoms below it. Under this convention the family of closed atom sets is intersection-closed, contains the empty set, all singletons, and the full atom set, and its meet is intersection.
+
+We use a Betti-poset convention that includes the bottom. For $m>\hat0$ and $i\ge1$, the Gasharov--Peeva--Welker formula \cite{GPW} is
+\begin{equation}\label{eq:gpw}
+\beta_{i,m}(S/Q)=\dim_{\K}\widetilde H_{i-2}((\hat0,m)_{L_Q};\K).
+\end{equation}
+The bottom contribution is separately $\beta_{0,\hat0}=1$; it is not obtained by blindly substituting the bottom into~\eqref{eq:gpw}. The Betti poset $\B(Q)$ consists of the bottom and the degrees with a nonzero Betti number. Our comparison of multigraded Betti numbers is under the stated correspondence of abstract lattice elements, not an identification of exponent vectors in different polynomial rings.
+
+Stanley projective dimension of an ideal or quotient depends only on its lcm-lattice \cite{IKMF2017}. More precisely, the usual monotonicity statement for a surjective join-preserving map $\delta:L\to L'$ requires
+\begin{equation}\label{eq:bottom}
+\delta^{-1}(\hat0_{L'})=\{\hat0_L\}.
+\end{equation}
+Under these hypotheses both Stanley projective dimensions for $L$ are at least the corresponding values for $L'$ \cite[Theorem 4.5]{IKMF2017}.
+
+The reduction to Betti data must also retain lattice structure. If $B\subseteq L$ is the Betti poset, let
+\[
+M_L(B)=\left\{\bigwedge A:A\subseteq B\right\},\qquad \bigwedge\varnothing=\hat1_L.
+\]
+This is the meet closure \emph{including the ambient top}. Katth\"an's reduction uses $M_L(B)$, not $B$ itself, which need not be a lattice \cite[Proposition 3.6]{Katthan2016}. Accordingly, deletion arguments concern appropriate elements of $L\setminus M_L(B)$ and the relevant join maps satisfying~\eqref{eq:bottom}; indiscriminately deleting $L\setminus B$ is not the stated reduction.
+
+For $g\in\mathbb N^n$ bounding all generator exponents, define
+\[
+P_Q^g=\{c\in[0,g]:z^c\in Q\},\quad
+P_{S/Q}^g=[0,g]\setminus P_Q^g,\quad
+\rho_g(d)=|\{i:d_i=g_i\}|.
+\]
+The interval-partition theorem of Herzog--Vladoiu--Zheng \cite{HVZ} characterises Stanley depth by partitions of these finite posets with lower bounds on $\rho_g$ at their tops. An arbitrary interval does not automatically represent just one Stanley space; the following refinement supplies the exact normal form used here.
+
+\begin{lemma}[Normalised interval refinement]\label{lem:normal}
+An interval $[c,d]$ in either characteristic poset can be partitioned into intervals $[b,b^Z]$, where $Z=\{i:d_i=g_i\}$ and
+\[
+(b^Z)_i=\begin{cases}g_i&i\in Z,\\b_i&i\notin Z.\end{cases}
+\]
+Every refined interval has the same value $|Z|=\rho_g(d)$ at its top. Thus restricting the interval search to this form does not change the optimum.
+\end{lemma}
+\begin{proof}
+For each choice $a_i\in[c_i,d_i]$ for $i\notin Z$, take $b_i=c_i$ on $Z$ and $b_i=a_i$ off $Z$. These intervals are disjoint and cover $[c,d]$. For $i\notin Z$, $a_i\le d_i<g_i$, so the coordinates at the box maximum are exactly $Z$. The refined interval corresponds to $z^b\K[Z]$ in the standard construction of \cite{HVZ}. This construction works for the ideal and quotient posets.
+\end{proof}
+
+\section{The common Betti poset}\label{sec:betti}
+Write $1245$ for $\{1,2,4,5\}$, and similarly for other atom sets.
+\begin{lemma}\label{lem:lattices}
+The closed-set descriptions of the two lcm-lattices are
+\[
+L_I=2^{[6]}\setminus\{1245,1256,2456,12456\},\qquad
+L_J=L_I\setminus\{23456\}.
+\]
+In particular their sizes are 60 and 59. The element $23456$ is a non-atom meet-irreducible of $L_I$.
+\end{lemma}
+\begin{proof}
+Compute the lcm of the generators indexed by each $A\subseteq[6]$ and replace $A$ by all generator indices dividing that lcm. This is an explicit 64-subset calculation with the displayed monomials. For $I$, indices $1,2,4,5,6$ are each forced by a uniquely maximal coordinate; the only additional index is $3$, which is forced when $2,5$ and at least two of $1,4,6$ are present. This gives the four missing closed sets. For $J$, the maximal-coordinate test first forces indices $2,4,5,6$; the remaining closure checks give precisely the same four exclusions and $23456$. These tests can also be performed directly for all 64 subsets without using the closure description. Finally, $23456$ has only the full set as a strict upper element.
+\end{proof}
+\begin{lemma}\label{lem:betti}
+Over every field the common Betti poset is
+\begin{equation}\label{eq:commonB}
+B=L_I\setminus\{12345,12356,23456,123456\}.
+\end{equation}
+For each nonempty $T\in B$, the only nonzero Betti number in that degree is $\beta_{|T|,T}=1$. Together with the bottom contribution this gives 56 nonzero Betti numbers and total sequence $(1,6,15,20,12,2)$.
+\end{lemma}
+\begin{proof}[Finite homology proof]
+For each non-bottom closed set $T$, form its atom crosscut complex
+\[
+\Delta_T=\{A\subseteq T:\bigvee A<T\}.
+\]
+Its reduced homology agrees with that of the open interval in~\eqref{eq:gpw}. Enumerate faces, orient them in increasing atom order, and use the augmented integral boundary matrices. Integer Smith normal forms in the supplied audit give a single copy of $\mathbb Z$ in degree $|T|-2$ for the nonempty sets of~\eqref{eq:commonB}, and zero reduced homology for the other sets. No torsion factors occur. Applying~\eqref{eq:gpw} and the universal coefficient theorem proves the assertion for every field, not only characteristic zero. The public verifier uses unimodular integer elimination with unit pivots: a nonzero residual matrix without a unit pivot is reported as unknown, rather than declared torsion-free. This provides a separate executable route for these particular boundary matrices without requiring a general Smith-form library. Counting the nonempty sets by cardinality gives $6,15,20,12,2$.
+\end{proof}
+Thus $\pdim S/I=\pdim S'/J=5$ and $\pdim I=\pdim J=4$. The Auslander--Buchsbaum formula gives the ordinary depths stated in the introduction.
+
+\section{Stanley dimensions and the nine-point obstruction}\label{sec:obstruction}
+The boxes are $g_I=(2,2,2,2,2)$ and $g_J=(2,3,2,1,1,2,2)$. Their ideal posets contain 188 and 671 points. The complete decompositions in Appendix~\ref{app:partitions} contain 32 and 79 spaces and have minimum dimensions two and five. Pointwise membership, disjointness and coverage checks therefore give
+\begin{equation}\label{eq:positive}
+\sdepth I\ge2,\qquad \sdepth J\ge5.
+\end{equation}
+We next prove the upper bound for $I$ without a solver verdict.
+
+Write $\e=(1,1,1)$ and $v_j=\e+e_j$ for $j\in\{1,2,3\}$. In five coordinates consider
+\begin{equation}\label{eq:core}
+\begin{split}
+m&=(\e,1,1),\\
+r_j^4&=(v_j,1,0),\qquad r_j^5=(v_j,0,1)\quad(1\le j\le3),\\
+q^4&=(\e,0,2),\qquad q^5=(\e,2,0).
+\end{split}
+\end{equation}
+All nine points belong to $P_I^{g_I}$.
+
+\begin{proposition}\label{prop:core}
+No family of pairwise disjoint normalised intervals of depth at least three in $P_I^{g_I}$ covers the nine points~\eqref{eq:core}. Consequently $\sdepth I=2$ and $\spdim I=3$.
+\end{proposition}
+\begin{proof}
+Suppose such a family exists. Name the intervals containing $m,r_j^4,r_j^5,q^4,q^5$ by $M,A_j,B_j,C^4,C^5$, respectively. These names do \emph{not} initially require different intervals. For an interval $X$, write $Z(X)$ for its coordinates whose top equals two. Put
+\[
+Z=Z(M),\quad T_j=Z(A_j)\setminus\{j\},\quad
+T'_j=Z(B_j)\setminus\{j\}.
+\]
+Each $T_j,T'_j$ has at least two elements and is a subset of $\{1,2,3,4,5\}\setminus\{j\}$. The bottom of $M$ is $m$, since only generator 3 divides $x^m$. The bottom of $A_j$ has coordinate $j$ equal to two and coordinate five zero; that of $B_j$ has coordinate $j$ equal to two and coordinate four zero. This follows because exactly one generator divides the respective core point. A point above one of these core points belongs to its interval precisely when it is below its top.
+
+Distinctness needed in the following comparisons is justified by bottoms. An interval containing two core points must have bottom below their meet. The meets for $M$ versus the other named intervals, $A_i$ versus $A_j$ ($i\ne j$), and $B_i$ versus $B_j$ lie outside $I$. The same is true for $C^5$ versus $A_i$, and $C^4$ versus $B_i$. These are therefore distinct intervals. Intersections at the indicated points give:
+\begin{enumerate}[label=(F\arabic*),leftmargin=14mm]
+\item If $j\in Z$, then $5\notin Z(A_j)$ and $4\notin Z(B_j)$, using $(v_j,1,1)$.
+\item If $4\in Z$, then $5\notin Z(C^5)$; if $5\in Z$, then $4\notin Z(C^4)$, using $(\e,2,1)$ and $(\e,1,2)$.
+\item For $i\ne j$ in $\{1,2,3\}$, not both $i\in T_j$ and $j\in T_i$; likewise for $T'$. The witnesses are $(\e+e_i+e_j,1,0)$ and $(\e+e_i+e_j,0,1)$.
+\item Not both $i\in Z(C^5)$ and $4\in Z(A_i)$; not both $i\in Z(C^4)$ and $5\in Z(B_i)$. The witnesses are $(v_i,2,0)$ and $(v_i,0,2)$.
+\item \emph{If $A_i\ne B_i$}, not both $5\in Z(A_i)$ and $4\in Z(B_i)$, using $(v_i,1,1)$.
+\end{enumerate}
+The qualification in (F5) is essential. For example, the interval $[(2,1,1,0,0),(2,1,1,2,2)]$ lies in $P_I^{g_I}$, has depth three, and contains both $r_1^4$ and $r_1^5$. It is not ruled out by disjointness alone.
+
+We use one elementary observation repeatedly. If $U_j\subseteq(\{1,2,3\}\setminus\{j\})\cup\{*\}$, $|U_j|\ge2$, and no pair $i\in U_j$, $j\in U_i$ occurs, then the arrows $j\to i$ among $1,2,3$ form a directed three-cycle. Indeed every vertex has an outgoing arrow, and among three vertices with no two-cycle there are at most three arrows. Thus $U_j=\{*,\operatorname{next}(j)\}$ for a cyclic permutation $\operatorname{next}$.
+
+Put $Z_0=Z\cap\{1,2,3\}$. The constraints just obtained are symmetric in these three indices and under exchange of coordinates four and five.
+
+\emph{Case $|Z_0|=3$.} By (F1) all $T_j$ avoid five. The observation with $*=4$ forces four into every $Z(A_j)$. But $Z(C^5)$ contains four and at least one of $1,2,3$, contradicting (F4).
+
+\emph{Case $|Z_0|=2$.} Write $Z_0=\{i,j\}$ and let $k$ be the remaining index; by symmetry assume $4\in Z$. By (F1), $T_i,T_j$ avoid five. By (F2), $Z(C^5)$ avoids five, so it contains four and at least two of $1,2,3$. Relabel $i,j$ so that $i\in Z(C^5)$. By (F4), $T_i=\{j,k\}$. Then (F3) excludes $i$ from $T_j,T_k$, forcing $T_j=\{k,4\}$. By (F4), $j\notin Z(C^5)$; hence $k\in Z(C^5)$ and $4\notin T_k$. We obtain $T_k=\{j,5\}$, contradicting (F3) for $j,k$.
+
+\emph{Case $|Z_0|=1$.} Write $Z_0=\{i\}$, so $4,5\in Z$. We first prove that no merger $A_l=B_l$ is possible in this case. For $l=i$, such a merged interval would have both fourth and fifth top coordinates equal to two, contrary to (F1). If $A_j=B_j$ for $j\ne i$, let $k$ be the third index. Its top contains both four and five, so (F4) excludes $j$ from both $C$ tops. By (F2) and the depth requirement,
+\[
+Z(C^5)=\{4,i,k\},\qquad Z(C^4)=\{5,i,k\}.
+\]
+Now (F1),(F4) give $T_i=T'_i=\{j,k\}$, and (F3) excludes $i$ from $T_k,T'_k$. Applying (F4) at $k$ forces
+\[
+T_k=\{j,5\},\qquad T'_k=\{j,4\}.
+\]
+The intervals $A_k,B_k$ are distinct, because their fourth top coordinates differ, but $(v_k,1,1)$ belongs to both. This is a contradiction. Hence (F5) is now valid for all three indices.
+
+By (F2), $Z(C^5)$ avoids five and $Z(C^4)$ avoids four, and each contains at least two of $1,2,3$. Suppose first that $i\in Z(C^5)$. Then $T_i=\{j,k\}$. Choose $j\in Z(C^5)$; (F3),(F4) give $T_j=\{k,5\}$ and $T_k=\{4,5\}$. By (F5), $T'_j,T'_k$ avoid four, and (F1) gives the same for $T'_i$. The three-cycle observation with $*=5$ forces five into every $Z(B_l)$, contradicting (F4) for any $l\in Z(C^4)\cap\{1,2,3\}$.
+
+It remains that $i\notin Z(C^5)$. Then $j,k\in Z(C^5)$ and (F4) excludes four from $T_j,T_k$. We have
+\[
+T_i\subseteq\{j,k,4\},\quad T_j\subseteq\{i,k,5\},\quad T_k\subseteq\{i,j,5\}.
+\]
+The arrow-count argument again forces a three-cycle; hence both $T_j,T_k$ contain five. By (F5), $T'_j,T'_k$ avoid four. If $i\notin Z(C^4)$, then $j,k\in Z(C^4)$ and (F4) also excludes five from $T'_j,T'_k$; these sets must be $\{i,k\}$ and $\{i,j\}$, contradicting (F3). If instead $i\in Z(C^4)$, then $T'_i=\{j,k\}$ by (F1),(F4), and (F3) excludes $i$ from $T'_j,T'_k$. Choose $j\in Z(C^4)$; (F4) excludes five from $T'_j$, while four is already excluded. Only $k$ remains, contradicting $|T'_j|\ge2$.
+
+Finally $|Z_0|=0$ is impossible because $|Z|\ge3$. All cases are exhausted. Lemma~\ref{lem:normal} and~\eqref{eq:positive} conclude the proof.
+\end{proof}
+
+\subsection{A separate exhaustive-cover proof and the upper bound for $J$}
+For completeness, the finite check of Proposition~\ref{prop:core} does not use (F1)--(F5). Generate every normalised interval $A\subseteq P$ of depth at least $t$ that meets a required set $C\subseteq P$. For a family $E$ of eligible intervals define $\mathrm{Cover}(C,E)$ recursively. It is true if $C=\varnothing$. Otherwise choose $q\in C$ and return the disjunction, over $A\in E$ containing $q$, of
+\begin{equation}\label{eq:recurrence}
+\mathrm{Cover}\bigl(C\setminus A,\{D\in E:D\cap A=\varnothing\}\bigr).
+\end{equation}
+The empty disjunction is false. Intersections are tested in the \emph{whole characteristic poset}, not only in $C$. Induction on $|C|$ proves that this recurrence exactly decides existence of a disjoint interval cover of $C$. One interval may cover several required points, including $r_j^4$ and $r_j^5$. Choosing a point with fewest eligible intervals and memoising states changes efficiency, not correctness.
+
+For the nine-point set, the recorded exhaustive check has 264 candidate intervals and returns false after 564 visited states. Removing any one required point gives a true partial-cover instance. This establishes \emph{inclusion-minimality of this obstruction}, not minimum possible cardinality among all obstructions, nor a full partition after deletion of a point. For $J$ at threshold six, the full required set consists of 671 points; 3,097 candidate intervals give false after 18 visited states. Together with the 79-space partition this proves $\sdepth J=5$. Counts refer to the stated audit's deterministic interval ordering and memoisation; other correct implementations need not visit the same number of states.
+
+\section{Direct quotient witnesses}\label{sec:quotients}
+The quotient boxes have 55 and 625 points, respectively: $3^5=188+55$ and $3\cdot4\cdot3\cdot2\cdot2\cdot3\cdot3=671+625$.
+\begin{proposition}\label{prop:quotients}
+We have $\sdepth S/I=0$ and $\sdepth S'/J=2$, hence both quotient Stanley projective dimensions equal five.
+\end{proposition}
+\begin{proof}
+The monomial $u=x_1x_2x_3x_4$ is outside $I$, while its products by $x_1,x_2,x_3,x_4,x_5$ are divisible, respectively, by generators $4,6,1,5,3$. In any Stanley decomposition of $S/I$, the space containing $u$ cannot have any free variable. Thus $\sdepth S/I=0$.
+
+For $J$, take $v=y_1y_2^2y_3^2y_5y_7\notin J$. Its products by $y_1,y_2,y_4,y_6,y_7$ are divisible, respectively, by generators $4,6,3,1,2$. Therefore a Stanley space containing $v$ can have free variables only among $y_3,y_5$, giving $\sdepth S'/J\le2$. The supplied quotient certificate partitions all 625 quotient-box points into 125 intervals of depth at least two, and is checked point by point. This proves the reverse inequality. All statements are independent of the characteristic.
+\end{proof}
+This corrects the five-variable quotient identification: a certificate for an earlier six-variable realization is not a certificate for the displayed $S/I$. The bound zero is legitimate and must be included in any depth search. Combining Sections~\ref{sec:betti}--\ref{sec:quotients} proves Theorem~\ref{thm:main}.
+
+\section{A squarefree single-variable colon realization}\label{sec:colon}
+The same lattice separation has a concrete realization in one ring. This is an application of the lattice description and Katth\"an's colon formulation, not a new general coordinatisation theorem.
+Let $T=\K[z_1,\ldots,z_{14}]$ and define $H$ by the following six squarefree generators in the matched atom order:
+\begin{align*}
+h_1&=z_2z_3z_6z_8z_9z_{12}z_{14},&h_2&=z_{11}z_{12}z_{13},\\
+h_3&=z_1z_2z_5z_8z_{11},&h_4&=z_1z_8z_9z_{10},\\
+h_5&=z_5z_6z_7,&h_6&=z_1z_2z_3z_4.
+\end{align*}
+\begin{corollary}\label{cor:colon}
+The ideals $H$ and $(H:z_{14})$ have isomorphic Betti posets over every field and satisfy
+\[
+\sdepth_T H=11,\quad \sdepth_T(H:z_{14})=12,
+\qquad \spdim_T H=3,\quad\spdim_T(H:z_{14})=2.
+\]
+Their quotients both have Stanley projective dimension five and Stanley depth nine. No minimality of the 14-variable realization is asserted.
+\end{corollary}
+\begin{proof}
+Label $z_1,\ldots,z_{14}$ by the following closed atom sets:
+\begin{equation}\label{eq:labels}
+\begin{gathered}
+125,245,2345,12345,1246,2346,12346,\\
+256,2356,12356,1456,3456,13456,23456.
+\end{gathered}
+\end{equation}
+These labels contain every meet-irreducible of $L_I$ and $L_J$. For atom $i$, put a variable $z_F$ into $h_i$ exactly when $i\notin F$; this gives the displayed generators. For an atom subset $A$, its lcm contains $z_F$ precisely when $A\not\subseteq F$. Since every lattice element is the meet of the meet-irreducibles above it, these labels distinguish exactly the closures of subsets in $L_I$. Thus $L_H\cong L_I$.
+
+Only $h_1$ contains $z_{14}$. Taking the colon removes that variable from $h_1$ and leaves all other generators unchanged, without redundancy. The remaining labels all belong to $L_J$ and still include its meet-irreducibles; the same argument gives $L_{(H:z_{14})}\cong L_J$. Lattice invariance and Theorem~\ref{thm:main} now give the dimensions. Including newly created meet-irreducibles after deletion is essential: simply omitting the deleted element from a minimal labeling of $L_I$ need not preserve $L_J$.
+\end{proof}
+
+\section{The five-generator census}\label{sec:census}
+Theorem~\ref{thm:five} is a finite classification statement, with a completeness argument in addition to a count. The supplied census contains 7,443 representatives of five-atom atomistic lattices. The audit checks intersection closure, the presence of every atom and of the bottom and top, absence of duplicate atom-permutation orbits, and the Boolean lattice. It then checks closure under every allowable meet-irreducible non-atom deletion: 28,668 distinct labelled child encodings are represented. Every atomistic lattice on these atoms can be obtained from the Boolean lattice by successive such deletions \cite[Algorithm 3.1 and its justification]{IKMF2016}. Hence these checks establish completeness up to isomorphism; matching a published count alone would not suffice.
+
+Every stored ideal realization is checked by recomputing its lcm-lattice. All crosscut complexes are recomputed integrally; there are 367 distinct complexes in this census, and no torsion is found. Thus the resulting Betti-poset classes are valid over every field. There are 1,485 isomorphism classes of Betti posets.
+
+For a nonprincipal ideal with five generators the bound
+\[
+1\le\spdim I\le\lfloor5/2\rfloor=2
+\]
+reduces the depth decision to one threshold. The upper bound is the generator bound attributed to Okazaki in \cite[Proposition 5.2]{IKMF2017}, not the interval-partition theorem of \cite{HVZ}. For a realization in $n$ variables the exact-cover test at threshold $n-1$ decides whether $\spdim I=1$; otherwise it equals two. All 7,443 labels are recomputed, with the result
+\begin{center}
+\begin{tabular}{lrr}\toprule
+Ideal Stanley projective dimension&1&2\\\midrule
+Number of five-atom lattice classes&1,358&6,085\\\bottomrule
+\end{tabular}
+\end{center}
+Every positive partition is checked point by point. The audit's largest negative-or-positive search visits 176 states, and no resource cap is reached. Within each of the 1,485 Betti-poset classes the value is constant. This proves the five-generator ideal statement. Principal ideals and the previously established smaller cases complete Theorem~\ref{thm:five}. For quotients, the existing equality $\spdim S/I=\pdim S/I$ for at most five generators and the Betti-poset determination of projective dimension give the corresponding known assertion.
+
+\section{Verification, corrections and limitations}\label{sec:verification}
+\paragraph{Finite verification contract.}
+A positive partition requires membership, disjointness and exact coverage of the appropriate box. A negative result requires completion of every branch of~\eqref{eq:recurrence}. A resource cap, interrupted computation or solver timeout has status \emph{unknown}, not false or infeasible. Higher unknown thresholds cannot be skipped to declare an exact Stanley depth. Threshold zero is included for quotients. These distinctions repair latent problems in the original wrapper logic; no theorem here follows from treating unknown as unsatisfiable.
+
+\paragraph{Evidence and replay scope.}
+The supplied reviewer audit recomputes the example's lattices and integral homology, the complete printed and JSON partitions, the nine-point obstruction allowing interval mergers, the depth-six decision for $J$, the quotients, and the five-atom census and depth labels. These three audit programs were freshly executed during revision in ordinary and optimised Python modes. That is internal replay of supplied audit code, not independent authorship, unaffiliated reproduction or formal verification. The positive tables below are human-inspectable certificates. Negative computations are exhaustive search results, not DRAT/LRAT files. The separately written public verifier and its receipts specify the reproducible release interface.
+
+\paragraph{Corrections relative to the supplied draft.}
+The unconditional use of (F5) was invalid; Proposition~\ref{prop:core} now proves distinctness in the only case that needs it. The quotient $S/I$ has 55 characteristic-box points and depth zero, not the 83-point data of an earlier six-variable realization. The full 79-space $J$ and 32-space $I$ decompositions are now numbered, breakable tables. The lattice reduction uses meet closure with top, and join-map monotonicity includes~\eqref{eq:bottom}. All-field claims use integral, not merely rational, homology checks.
+
+\paragraph{Discovery and search limitations.}
+Historical six-atom searches were nonuniform walks and insertion experiments, with some large instances skipped. They are discovery logs, not a complete six-atom census and not a sampling design from which rarity can be inferred. We do not use their reported frequencies to support any theorem. The minimal-generator claim instead rests on the complete five-atom census above. Bounded primary-source searches found no earlier matching resolution, but do not establish exhaustive priority. No counterexample to the quotient assertion has been obtained here. The squarefree colon realization cannot change that, because quotient Stanley projective dimension is lattice-invariant. Nor does a tensor-product inequality alone justify amplifying the defect by an unproved additivity assertion.
+
+\paragraph{Availability and status.}
+The release package contains the lattice census, invariant and Betti-class data, explicit interval certificates, and verification code. The repository is \url{https://github.com/ipitchford/katthan-betti-poset-counterexample}, tag \code{v2.0.0-candidate}, archived as \href{https://doi.org/10.5281/zenodo.23362079}{doi:10.5281/zenodo.23362079}. The public standard-library verifier is run from the repository with \code{python3 -B code/verify.py --census}; the optimisation-mode check uses \code{python3 -B -O code/verify.py --census}. Its exact-cover implementation is \code{code/exact_core.py}. Computational outcomes are intended to be read with their exact input identities and replay receipts. This is an AI-assisted, unrefereed mathematical candidate, attributed to Anonymous; no human mathematical review, proof-assistant verification, or prospective research-rating guarantee is claimed. The manuscript is offered under the CC0 1.0 Universal dedication. The supplied external audit remains a distinct source of evidence; its inclusion or redistribution is not implied by this manuscript's licence.
+
+\begin{thebibliography}{10}
+\bibitem{GPW} V. Gasharov, I. Peeva and V. Welker, The lcm-lattice in monomial resolutions, \emph{Mathematical Research Letters} \textbf{6} (1999), 521--532. \href{https://doi.org/10.4310/MRL.1999.v6.n5.a5}{doi:10.4310/MRL.1999.v6.n5.a5}.
+\bibitem{HVZ} J. Herzog, M. Vladoiu and X. Zheng, How to compute the Stanley depth of a monomial ideal, \emph{Journal of Algebra} \textbf{322} (2009), 3151--3169. \href{https://doi.org/10.1016/j.jalgebra.2008.01.006}{doi:10.1016/j.jalgebra.2008.01.006}.
+\bibitem{IKMF2016} B. Ichim, L. Katth\"an and J. J. Moyano-Fern\'andez, LCM-lattices and Stanley depth: A first computational approach, \emph{Experimental Mathematics} \textbf{25} (2016), 46--53. \href{https://doi.org/10.1080/10586458.2015.1005257}{doi:10.1080/10586458.2015.1005257}.
+\bibitem{IKMF2017} B. Ichim, L. Katth\"an and J. J. Moyano-Fern\'andez, Stanley depth and the lcm-lattice, \emph{Journal of Combinatorial Theory, Series A} \textbf{150} (2017), 295--322. \href{https://doi.org/10.1016/j.jcta.2017.03.005}{doi:10.1016/j.jcta.2017.03.005}.
+\bibitem{Katthan2015} L. Katth\"an, Stanley depth and simplicial spanning trees, \emph{Journal of Algebraic Combinatorics} \textbf{42} (2015), 507--536. \href{https://doi.org/10.1007/s10801-015-0589-y}{doi:10.1007/s10801-015-0589-y}.
+\bibitem{Katthan2016} L. Katth\"an, Betti posets and the Stanley depth, \emph{Arnold Mathematical Journal} \textbf{2} (2016), 267--276. \href{https://doi.org/10.1007/s40598-016-0039-5}{doi:10.1007/s40598-016-0039-5}.
+\end{thebibliography}
+
+\appendix
+\section{Complete positive Stanley decompositions}\label{app:partitions}
+Each row $(r,c,Z)$ denotes the Stanley space $x^c\K[x_i:i\in Z]$ for $I$, or $y^c\K[y_i:i\in Z]$ for $J$. Exponent vectors are in variable order, and free-variable indices are one-based. Thus the corresponding characteristic interval is $[c,c^Z]$ from Lemma~\ref{lem:normal}. Vector notation records every exponent and avoids long, potentially clipped monomials. The row order is the order of the supplied JSON partition certificate (whose historical key \code{I'} denotes $J$). Every row is displayed; continuation headers mark page breaks.
+
+\subsection{Decomposition of $I$}
+{\small
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{r@{\qquad}c@{\qquad}l}
+\caption{All 32 spaces for $I$, covering 188 box points; minimum dimension 2.}\\
+\toprule Row & Exponent vector $c$ & Free indices $Z$\\\midrule
+\endfirsthead
+\multicolumn{3}{c}{\tablename\ \thetable\ continued}\\
+\toprule Row & Exponent vector $c$ & Free indices $Z$\\\midrule
+\endhead
+\midrule\multicolumn{3}{r}{Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+1 & $(0,0,0,0,2)$ & $\{1,3,5\}$ \\
+2 & $(0,0,0,1,2)$ & $\{1,3,5\}$ \\
+3 & $(0,0,0,2,0)$ & $\{1,3,4,5\}$ \\
+4 & $(0,1,0,0,2)$ & $\{1,2,3,4,5\}$ \\
+5 & $(0,1,0,2,0)$ & $\{1,2,4\}$ \\
+6 & $(0,1,0,2,1)$ & $\{1,2,4\}$ \\
+7 & $(0,1,1,2,0)$ & $\{3,4\}$ \\
+8 & $(0,1,1,2,1)$ & $\{1,2,3,4\}$ \\
+9 & $(0,1,2,0,0)$ & $\{1,2,3\}$ \\
+10 & $(0,1,2,0,1)$ & $\{2,3\}$ \\
+11 & $(0,1,2,1,0)$ & $\{2,3\}$ \\
+12 & $(0,1,2,1,1)$ & $\{2,3\}$ \\
+13 & $(0,2,1,2,0)$ & $\{2,3,4\}$ \\
+14 & $(1,1,1,1,1)$ & $\{1,2,3\}$ \\
+15 & $(1,1,1,2,0)$ & $\{1,4\}$ \\
+16 & $(1,1,2,0,1)$ & $\{2,3\}$ \\
+17 & $(1,1,2,1,0)$ & $\{1,2,3,4\}$ \\
+18 & $(1,2,0,0,0)$ & $\{1,2\}$ \\
+19 & $(1,2,0,0,1)$ & $\{1,2\}$ \\
+20 & $(1,2,0,1,0)$ & $\{1,2\}$ \\
+21 & $(1,2,0,1,1)$ & $\{1,2\}$ \\
+22 & $(1,2,1,0,0)$ & $\{2,4\}$ \\
+23 & $(1,2,1,0,1)$ & $\{1,2\}$ \\
+24 & $(2,0,1,0,0)$ & $\{1,2\}$ \\
+25 & $(2,0,1,0,1)$ & $\{1,3\}$ \\
+26 & $(2,0,1,1,0)$ & $\{1,3\}$ \\
+27 & $(2,0,1,1,1)$ & $\{1,3\}$ \\
+28 & $(2,0,2,0,0)$ & $\{1,3\}$ \\
+29 & $(2,1,1,0,1)$ & $\{1,3\}$ \\
+30 & $(2,1,1,1,0)$ & $\{1,2\}$ \\
+31 & $(2,2,1,2,0)$ & $\{1,2,4\}$ \\
+32 & $(2,2,2,0,1)$ & $\{1,2,3\}$ \\
+\end{longtable}
+}
+\subsection{Decomposition of $J$}
+{\small
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{r@{\qquad}c@{\qquad}l}
+\caption{All 79 spaces for $J$, covering 671 box points; minimum dimension 5.}\\
+\toprule Row & Exponent vector $c$ & Free indices $Z$\\\midrule
+\endfirsthead
+\multicolumn{3}{c}{\tablename\ \thetable\ continued}\\
+\toprule Row & Exponent vector $c$ & Free indices $Z$\\\midrule
+\endhead
+\midrule\multicolumn{3}{r}{Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+1 & $(0,0,0,0,1,0,2)$ & $\{3,4,5,6,7\}$ \\
+2 & $(0,0,0,1,0,2,0)$ & $\{1,3,4,6,7\}$ \\
+3 & $(0,0,0,1,1,2,0)$ & $\{1,3,4,5,6\}$ \\
+4 & $(0,0,0,1,1,2,1)$ & $\{1,3,4,5,6\}$ \\
+5 & $(0,1,0,0,1,0,2)$ & $\{2,4,5,6,7\}$ \\
+6 & $(0,1,0,1,0,2,0)$ & $\{2,3,4,5,6\}$ \\
+7 & $(0,1,0,1,0,2,1)$ & $\{2,3,4,6,7\}$ \\
+8 & $(0,1,0,1,1,2,1)$ & $\{2,3,4,5,6\}$ \\
+9 & $(0,1,1,0,1,0,2)$ & $\{2,3,4,5,7\}$ \\
+10 & $(0,1,1,0,1,1,2)$ & $\{3,4,5,6,7\}$ \\
+11 & $(0,2,1,0,1,1,2)$ & $\{2,4,5,6,7\}$ \\
+12 & $(0,2,2,0,0,1,1)$ & $\{2,3,5,6,7\}$ \\
+13 & $(0,2,2,1,0,1,1)$ & $\{2,3,4,5,7\}$ \\
+14 & $(0,2,2,1,1,2,2)$ & $\{3,4,5,6,7\}$ \\
+15 & $(0,3,2,1,1,2,2)$ & $\{2,3,4,5,6,7\}$ \\
+16 & $(1,0,0,0,1,0,2)$ & $\{1,4,5,6,7\}$ \\
+17 & $(1,0,1,0,1,0,2)$ & $\{3,4,5,6,7\}$ \\
+18 & $(1,1,0,0,1,0,2)$ & $\{1,3,5,6,7\}$ \\
+19 & $(1,1,0,1,0,2,0)$ & $\{1,4,5,6,7\}$ \\
+20 & $(1,1,0,1,1,0,2)$ & $\{1,2,4,5,7\}$ \\
+21 & $(1,1,0,1,1,1,2)$ & $\{1,2,4,5,7\}$ \\
+22 & $(1,1,1,1,0,2,0)$ & $\{2,3,4,6,7\}$ \\
+23 & $(1,1,1,1,1,0,0)$ & $\{1,4,5,6,7\}$ \\
+24 & $(1,1,2,1,1,0,0)$ & $\{3,4,5,6,7\}$ \\
+25 & $(1,2,0,0,1,0,2)$ & $\{1,2,5,6,7\}$ \\
+26 & $(1,2,0,1,0,2,0)$ & $\{1,4,5,6,7\}$ \\
+27 & $(1,2,1,0,1,0,2)$ & $\{1,3,5,6,7\}$ \\
+28 & $(1,2,1,1,1,0,0)$ & $\{1,4,5,6,7\}$ \\
+29 & $(1,2,2,0,0,1,1)$ & $\{1,2,3,4,7\}$ \\
+30 & $(1,2,2,0,0,2,1)$ & $\{1,2,3,6,7\}$ \\
+31 & $(1,2,2,0,1,1,1)$ & $\{1,2,3,5,6\}$ \\
+32 & $(1,2,2,1,1,0,0)$ & $\{3,4,5,6,7\}$ \\
+33 & $(1,3,0,0,0,0,0)$ & $\{1,2,4,5,6\}$ \\
+34 & $(1,3,0,0,0,0,1)$ & $\{1,2,4,6,7\}$ \\
+35 & $(1,3,0,0,1,0,1)$ & $\{1,2,4,5,6\}$ \\
+36 & $(1,3,0,1,1,2,2)$ & $\{2,4,5,6,7\}$ \\
+37 & $(1,3,1,0,0,0,0)$ & $\{1,2,5,6,7\}$ \\
+38 & $(1,3,1,1,0,0,0)$ & $\{1,2,4,5,7\}$ \\
+39 & $(1,3,1,1,0,1,0)$ & $\{1,2,4,5,7\}$ \\
+40 & $(1,3,1,1,1,2,0)$ & $\{2,4,5,6,7\}$ \\
+41 & $(1,3,2,0,0,0,0)$ & $\{1,2,3,4,5\}$ \\
+42 & $(1,3,2,0,0,0,1)$ & $\{2,3,4,5,7\}$ \\
+43 & $(1,3,2,0,0,1,0)$ & $\{1,2,3,5,6\}$ \\
+44 & $(1,3,2,0,1,1,2)$ & $\{2,3,5,6,7\}$ \\
+45 & $(1,3,2,1,0,1,0)$ & $\{1,2,3,4,5\}$ \\
+46 & $(1,3,2,1,1,1,1)$ & $\{2,3,4,5,6\}$ \\
+47 & $(1,3,2,1,1,1,2)$ & $\{2,3,4,5,7\}$ \\
+48 & $(1,3,2,1,1,2,0)$ & $\{2,3,4,5,6\}$ \\
+49 & $(1,3,2,1,1,2,2)$ & $\{2,3,4,5,6,7\}$ \\
+50 & $(2,0,1,0,1,0,2)$ & $\{1,4,5,6,7\}$ \\
+51 & $(2,0,2,0,0,0,0)$ & $\{1,3,4,5,7\}$ \\
+52 & $(2,0,2,0,0,1,0)$ & $\{1,3,5,6,7\}$ \\
+53 & $(2,0,2,1,0,1,0)$ & $\{1,3,4,5,7\}$ \\
+54 & $(2,0,2,1,1,2,2)$ & $\{1,3,4,5,6,7\}$ \\
+55 & $(2,1,1,1,0,2,0)$ & $\{1,2,4,6,7\}$ \\
+56 & $(2,1,2,0,0,0,0)$ & $\{1,3,4,5,6\}$ \\
+57 & $(2,1,2,0,0,0,1)$ & $\{1,2,3,4,7\}$ \\
+58 & $(2,1,2,0,0,1,1)$ & $\{1,3,4,6,7\}$ \\
+59 & $(2,1,2,0,1,0,1)$ & $\{1,2,3,4,5\}$ \\
+60 & $(2,1,2,0,1,1,1)$ & $\{1,3,4,5,6\}$ \\
+61 & $(2,1,2,1,1,0,2)$ & $\{1,2,3,4,5,7\}$ \\
+62 & $(2,1,2,1,1,1,2)$ & $\{1,3,4,5,7\}$ \\
+63 & $(2,1,2,1,1,2,2)$ & $\{1,3,4,5,6,7\}$ \\
+64 & $(2,2,2,0,0,0,0)$ & $\{1,3,4,5,6\}$ \\
+65 & $(2,2,2,1,0,2,1)$ & $\{1,3,4,6,7\}$ \\
+66 & $(2,2,2,1,1,1,1)$ & $\{1,3,4,5,6\}$ \\
+67 & $(2,2,2,1,1,1,2)$ & $\{1,3,4,5,7\}$ \\
+68 & $(2,2,2,1,1,2,2)$ & $\{1,3,4,5,6,7\}$ \\
+69 & $(2,3,0,1,1,2,2)$ & $\{1,2,3,4,5,6,7\}$ \\
+70 & $(2,3,1,1,1,2,0)$ & $\{1,2,4,5,6\}$ \\
+71 & $(2,3,1,1,1,2,1)$ & $\{1,2,4,5,6\}$ \\
+72 & $(2,3,2,0,1,0,2)$ & $\{1,2,3,5,7\}$ \\
+73 & $(2,3,2,0,1,1,2)$ & $\{1,2,3,5,6,7\}$ \\
+74 & $(2,3,2,1,0,2,0)$ & $\{1,2,3,4,6\}$ \\
+75 & $(2,3,2,1,0,2,1)$ & $\{1,2,3,4,6\}$ \\
+76 & $(2,3,2,1,0,2,2)$ & $\{1,2,3,4,6,7\}$ \\
+77 & $(2,3,2,1,1,1,1)$ & $\{1,2,3,4,5,6\}$ \\
+78 & $(2,3,2,1,1,1,2)$ & $\{1,2,3,4,5,7\}$ \\
+79 & $(2,3,2,1,1,2,0)$ & $\{1,2,3,4,5,6\}$ \\
+\end{longtable}
+}
+\end{document}

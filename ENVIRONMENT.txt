@@ -1,0 +1,13 @@
+Candidate: katthan-betti-poset-counterexample v2.0.0-candidate
+Date: 2026-10-14
+
+Public verification: Python 3 standard library; no SAT/MILP package required.
+Entrypoint: python3 -B code/verify.py --census
+Optimized mode: python3 -B -O code/verify.py --census
+The checker resolves package inputs relative to its own file location.
+Kernel: code/exact_core.py; unresolved decisions must remain UNKNOWN.
+
+Exact tested interpreter/version and completed results belong in the final
+replay summaries/receipt; they are not inferred from this environment note.
+Manuscript building requires a LaTeX installation with the packages declared
+in paper.tex. Building is separate from finite research verification.

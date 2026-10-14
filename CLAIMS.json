@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0-candidate",
+  "doi": "10.5281/zenodo.23362079",
+  "creator": "Anonymous",
+  "date": "2026-10-14",
+  "status": "unrefereed candidate",
+  "claims": [
+    {"id": "ideal-separation", "statement": "The displayed six-generated ideals have isomorphic Betti posets over every field and ideal Stanley projective dimensions 3 and 2", "dependencies": ["lattice correspondence", "integral Betti computations", "nine-point obstruction", "positive partitions", "J depth-six exclusion"]},
+    {"id": "generator-threshold", "statement": "No pair with at most five minimal generators exhibits ideal-side Betti-poset separation", "dependencies": ["complete lattice census", "all-field Betti classification", "exact ideal invariant checks"], "boundary": "Known quotient-side small-generator theorem is prior work"},
+    {"id": "squarefree-colon", "statement": "A six-generated squarefree ideal H in fourteen variables has spdim H=3 and spdim(H:z14)=2 with isomorphic Betti posets", "dependencies": ["ideal-separation", "explicit lattice realisation", "lcm-lattice invariance"], "boundary": "Fourteen is not claimed variable-minimal"},
+    {"id": "quotient-equality", "statement": "Both displayed quotient Stanley projective dimensions equal five", "dependencies": ["correct ambient dimensions", "annihilator witnesses", "J quotient partition"], "boundary": "Not a quotient counterexample"}
+  ],
+  "notClaimed": ["formal verification", "external human peer review", "universal novelty proof", "resolution of quotient conjecture", "refutation of restricted stoss formulation", "refutation of Stanley inequality for ideals", "tensor-product additivity"]
+}
